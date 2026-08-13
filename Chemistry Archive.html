@@ -1,0 +1,4857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chemistry Market | Laboratory Archive</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   CHEMISTRY MARKET
+   NOTEBOOK + LABORATORY THEME
+   ========================================================= */
+
+:root {
+    --paper: #fcfaf2;
+    --paper-2: #fffef8;
+    --paper-dark: #e8e3d4;
+
+    --line-blue: #a3c1e0;
+    --margin-red: #f28b82;
+
+    --ink: #181818;
+    --ink-soft: #444;
+
+    --bb-green: #2e5a36;
+    --bb-green-dark: #1e3c23;
+    --bb-green-light: #47784e;
+
+    --hazmat: #f4d03f;
+    --hazmat-dark: #d6b72c;
+
+    --danger: #c0392b;
+    --success: #2e8b57;
+
+    --sidebar-width: 285px;
+
+    --shadow: 5px 5px 0 var(--ink);
+    --shadow-small: 3px 3px 0 var(--ink);
+
+    --transition: 0.25s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+
+    color: var(--ink);
+
+    font-family: "Courier Prime", monospace;
+
+    background-color: var(--paper);
+
+    background-image:
+        linear-gradient(
+            90deg,
+            transparent 79px,
+            var(--margin-red) 79px,
+            var(--margin-red) 81px,
+            transparent 81px
+        ),
+        linear-gradient(
+            var(--line-blue) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        100% 28px,
+        100% 28px;
+
+    overflow-x: hidden;
+
+    transition:
+        background-color .4s ease,
+        color .4s ease;
+}
+
+/* =========================================================
+   DARK LABORATORY MODE
+   ========================================================= */
+
+body.dark-mode {
+    --paper: #101612;
+    --paper-2: #172019;
+    --paper-dark: #202a22;
+
+    --line-blue: #274c57;
+    --margin-red: #713d3d;
+
+    --ink: #e8f0e7;
+    --ink-soft: #b7c3b8;
+
+    --bb-green: #4c9b5a;
+    --bb-green-dark: #79c684;
+    --bb-green-light: #6caf75;
+
+    --hazmat: #e0bd32;
+
+    background-color: #101612;
+
+    background-image:
+        linear-gradient(
+            90deg,
+            transparent 79px,
+            var(--margin-red) 79px,
+            var(--margin-red) 81px,
+            transparent 81px
+        ),
+        linear-gradient(
+            var(--line-blue) 1px,
+            transparent 1px
+        );
+}
+
+/* =========================================================
+   GLOBAL ELEMENTS
+   ========================================================= */
+
+button,
+input,
+select {
+    font-family: "Courier Prime", monospace;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* =========================================================
+   CHEMISTRY BACKGROUND ANIMATION
+   ========================================================= */
+
+.chemistry-background {
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    overflow: hidden;
+
+    z-index: 0;
+
+    opacity: .5;
+}
+
+.bubble {
+    position: absolute;
+
+    width: 12px;
+    height: 12px;
+
+    border: 2px solid var(--bb-green);
+
+    border-radius: 50%;
+
+    opacity: .18;
+
+    animation: bubbleFloat linear infinite;
+}
+
+.bubble:nth-child(1) {
+    left: 12%;
+    bottom: -30px;
+    animation-duration: 12s;
+}
+
+.bubble:nth-child(2) {
+    left: 32%;
+    bottom: -40px;
+    animation-duration: 17s;
+    animation-delay: 2s;
+}
+
+.bubble:nth-child(3) {
+    left: 55%;
+    bottom: -20px;
+    animation-duration: 14s;
+    animation-delay: 5s;
+}
+
+.bubble:nth-child(4) {
+    left: 76%;
+    bottom: -40px;
+    animation-duration: 19s;
+    animation-delay: 1s;
+}
+
+.bubble:nth-child(5) {
+    left: 91%;
+    bottom: -20px;
+    animation-duration: 15s;
+    animation-delay: 4s;
+}
+
+@keyframes bubbleFloat {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: .2;
+    }
+
+    90% {
+        opacity: .12;
+    }
+
+    100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+    position: fixed;
+
+    left: 0;
+    top: 0;
+
+    width: var(--sidebar-width);
+    height: 100vh;
+
+    z-index: 1000;
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,.94),
+            rgba(255,255,255,.94)
+        );
+
+    border-right: 4px solid var(--bb-green);
+
+    box-shadow: 7px 0 0 rgba(0,0,0,.15);
+
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    transform: translateX(0);
+
+    transition:
+        transform .35s cubic-bezier(.16,1,.3,1),
+        background .3s ease;
+}
+
+.dark-mode .sidebar {
+    background:
+        linear-gradient(
+            rgba(17,26,19,.96),
+            rgba(17,26,19,.96)
+        );
+}
+
+/* Torn paper effect */
+
+.sidebar::after {
+    content: "";
+
+    position: absolute;
+
+    right: -7px;
+    top: 0;
+
+    width: 4px;
+    height: 100%;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            var(--hazmat) 0 8px,
+            transparent 8px 16px
+        );
+
+    opacity: .6;
+}
+
+/* Sidebar title */
+
+.sidebar-header {
+    border: 2px dashed var(--bb-green);
+
+    padding: 18px 14px;
+
+    background: var(--paper-2);
+
+    box-shadow: var(--shadow-small);
+
+    margin-bottom: 20px;
+}
+
+.sidebar-title {
+    font-family: "Special Elite", cursive;
+
+    font-size: 1.5rem;
+
+    color: var(--bb-green-dark);
+
+    line-height: 1.1;
+
+    margin-bottom: 6px;
+}
+
+.sidebar-subtitle {
+    font-size: .68rem;
+
+    color: var(--ink-soft);
+
+    font-style: italic;
+}
+
+/* Sidebar search */
+
+.sidebar-search {
+    display: flex;
+
+    border: 2px solid var(--ink);
+
+    background: white;
+
+    margin-top: 14px;
+}
+
+.dark-mode .sidebar-search {
+    background: #0c110d;
+}
+
+.sidebar-search input {
+    width: 100%;
+
+    min-width: 0;
+
+    border: 0;
+
+    outline: none;
+
+    background: transparent;
+
+    color: var(--ink);
+
+    padding: 9px;
+
+    font-size: .78rem;
+}
+
+.sidebar-search button {
+    border: 0;
+
+    border-left: 2px solid var(--ink);
+
+    background: var(--hazmat);
+
+    padding: 0 10px;
+
+    font-size: .9rem;
+}
+
+/* Sidebar nav */
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.nav-title {
+    font-family: "Special Elite", cursive;
+
+    color: var(--bb-green-dark);
+
+    font-size: .9rem;
+
+    margin: 8px 0 3px;
+}
+
+.side-option {
+    width: 100%;
+
+    text-align: left;
+
+    border: 2px solid var(--ink);
+
+    background: var(--paper-2);
+
+    color: var(--ink);
+
+    padding: 12px;
+
+    font-weight: bold;
+
+    box-shadow: var(--shadow-small);
+
+    transition: var(--transition);
+}
+
+.side-option:hover {
+    transform: translate(-2px,-2px);
+
+    background: var(--hazmat);
+
+    box-shadow: 5px 5px 0 var(--ink);
+}
+
+.side-option.active {
+    background: var(--bb-green);
+
+    color: white;
+
+    border-color: var(--ink);
+}
+
+.side-option .nav-icon {
+    margin-right: 8px;
+}
+
+/* Sidebar footer */
+
+.sidebar-footer {
+    margin-top: auto;
+
+    border-top: 2px dashed var(--ink);
+
+    padding-top: 15px;
+}
+
+.dark-mode-toggle {
+    width: 100%;
+
+    border: 2px solid var(--ink);
+
+    background: var(--ink);
+
+    color: var(--paper);
+
+    padding: 10px;
+
+    font-weight: bold;
+
+    box-shadow: var(--shadow-small);
+
+    margin-bottom: 12px;
+}
+
+.sidebar-note {
+    font-size: .65rem;
+
+    line-height: 1.4;
+
+    color: var(--ink-soft);
+
+    text-align: center;
+}
+
+/* =========================================================
+   MAIN APP
+   ========================================================= */
+
+.app {
+    position: relative;
+
+    z-index: 1;
+
+    margin-left: var(--sidebar-width);
+
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================================
+   TOP HEADER
+   ========================================================= */
+
+header {
+    background: rgba(255,255,255,.94);
+
+    border: 2px dashed var(--bb-green);
+
+    padding: 14px 22px;
+
+    margin: 20px auto;
+
+    width: calc(100% - 40px);
+
+    max-width: 1200px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    box-shadow: var(--shadow);
+
+    animation: headerIn .7s ease both;
+}
+
+.dark-mode header {
+    background: rgba(20,29,22,.95);
+}
+
+@keyframes headerIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo-area {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    cursor: pointer;
+
+    min-width: 190px;
+}
+
+.periodic-badge {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--bb-green);
+
+    color: var(--hazmat);
+
+    border: 2px solid var(--ink);
+
+    box-shadow: var(--shadow-small);
+
+    font-family: "Special Elite", cursive;
+
+    font-size: 1.4rem;
+}
+
+.logo-text h1 {
+    font-family: "Special Elite", cursive;
+
+    color: var(--bb-green-dark);
+
+    font-size: 1.35rem;
+}
+
+.logo-text p {
+    color: var(--ink-soft);
+
+    font-size: .65rem;
+
+    font-style: italic;
+}
+
+/* Header search */
+
+.header-search {
+    flex: 1;
+
+    max-width: 390px;
+
+    display: flex;
+
+    border: 2px solid var(--ink);
+
+    background: white;
+}
+
+.dark-mode .header-search {
+    background: #0b100c;
+}
+
+.header-search input {
+    width: 100%;
+
+    border: 0;
+
+    outline: none;
+
+    background: transparent;
+
+    color: var(--ink);
+
+    padding: 9px;
+
+    font-size: .8rem;
+}
+
+.header-search button {
+    border: 0;
+
+    border-left: 2px solid var(--ink);
+
+    background: var(--hazmat);
+
+    padding: 0 12px;
+}
+
+/* Header actions */
+
+.header-actions {
+    display: flex;
+
+    gap: 8px;
+}
+
+.btn {
+    border: 2px solid var(--ink);
+
+    background: var(--hazmat);
+
+    color: #111;
+
+    padding: 8px 12px;
+
+    font-weight: bold;
+
+    box-shadow: var(--shadow-small);
+
+    transition: .12s ease;
+}
+
+.btn:hover {
+    transform: translate(-2px,-2px);
+
+    box-shadow: 5px 5px 0 var(--ink);
+}
+
+.btn.green {
+    background: var(--bb-green);
+
+    color: white;
+}
+
+.btn.gray {
+    background: #ddd;
+}
+
+.btn.red {
+    background: #d9534f;
+
+    color: white;
+}
+
+/* =========================================================
+   MOBILE MENU
+   ========================================================= */
+
+.mobile-menu-button {
+    display: none;
+
+    position: fixed;
+
+    top: 14px;
+    left: 14px;
+
+    z-index: 1200;
+
+    width: 45px;
+    height: 45px;
+
+    border: 2px solid var(--ink);
+
+    background: var(--hazmat);
+
+    box-shadow: var(--shadow-small);
+
+    font-size: 1.2rem;
+}
+
+.sidebar-overlay {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,.55);
+
+    z-index: 900;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.container {
+    width: 100%;
+
+    max-width: 1200px;
+
+    margin: 0 auto;
+
+    padding: 0 20px 40px;
+
+    flex: 1;
+}
+
+.view {
+    display: none;
+
+    animation: pageIn .4s ease both;
+}
+
+.view.active {
+    display: block;
+}
+
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+section {
+    background: rgba(255,255,255,.93);
+
+    border: 2px solid var(--ink);
+
+    padding: 24px;
+
+    margin-bottom: 35px;
+
+    box-shadow: 6px 6px 0 rgba(0,0,0,.75);
+
+    position: relative;
+}
+
+.dark-mode section {
+    background: rgba(22,31,24,.95);
+}
+
+/* Notebook tape */
+
+section::before {
+    content: "";
+
+    position: absolute;
+
+    width: 90px;
+    height: 24px;
+
+    top: -12px;
+    left: 45%;
+
+    background: rgba(244,208,63,.65);
+
+    transform: rotate(-2deg);
+
+    opacity: .7;
+}
+
+section h2 {
+    font-family: "Special Elite", cursive;
+
+    color: var(--bb-green-dark);
+
+    border-bottom: 2px dashed var(--ink);
+
+    padding-bottom: 10px;
+
+    margin-bottom: 20px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.section-label {
+    font-family: "Courier Prime", monospace;
+
+    font-size: .7rem;
+
+    background: var(--hazmat);
+
+    color: #111;
+
+    padding: 4px 8px;
+
+    border: 1px solid var(--ink);
+}
+
+/* =========================================================
+   PRODUCT GRID
+   ========================================================= */
+
+.item-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill,minmax(220px,1fr));
+
+    gap: 20px;
+}
+
+.element-card {
+    background: var(--paper-2);
+
+    border: 2px solid var(--ink);
+
+    padding: 15px;
+
+    box-shadow: var(--shadow-small);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    min-height: 270px;
+
+    cursor: pointer;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+}
+
+.element-card:hover {
+    transform: translate(-3px,-3px);
+
+    box-shadow: 7px 7px 0 var(--ink);
+
+    border-color: var(--bb-green);
+}
+
+.el-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: .75rem;
+}
+
+.el-symbol {
+    font-family: "Special Elite", cursive;
+
+    color: var(--bb-green-dark);
+
+    font-size: 2.7rem;
+
+    text-align: center;
+
+    margin: 10px 0;
+}
+
+.el-name {
+    font-weight: bold;
+
+    text-align: center;
+
+    border-bottom: 1px dotted #aaa;
+
+    padding-bottom: 7px;
+
+    margin-bottom: 8px;
+}
+
+.el-info {
+    font-size: .72rem;
+
+    color: var(--ink-soft);
+
+    line-height: 1.4;
+}
+
+.el-footer {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 8px;
+
+    border-top: 1px solid #ddd;
+
+    padding-top: 10px;
+
+    margin-top: 15px;
+}
+
+.price {
+    color: var(--danger);
+
+    font-weight: bold;
+
+    font-size: .8rem;
+}
+
+/* =========================================================
+   EQUIPMENT CATEGORIES
+   ========================================================= */
+
+.equipment-category {
+    margin-bottom: 30px;
+}
+
+.equipment-category:last-child {
+    margin-bottom: 0;
+}
+
+.equipment-category h3 {
+    font-family: "Special Elite", cursive;
+
+    color: var(--bb-green-dark);
+
+    border-bottom: 2px dotted var(--bb-green);
+
+    padding-bottom: 7px;
+
+    margin-bottom: 15px;
+}
+
+.equipment-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill,minmax(190px,1fr));
+
+    gap: 14px;
+}
+
+.equipment-card {
+    background: var(--paper-2);
+
+    border: 2px solid var(--ink);
+
+    padding: 14px;
+
+    min-height: 160px;
+
+    box-shadow: var(--shadow-small);
+
+    cursor: pointer;
+
+    transition: .18s ease;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+}
+
+.equipment-card:hover {
+    transform: translate(-3px,-3px) rotate(-.5deg);
+
+    box-shadow: 6px 6px 0 var(--ink);
+
+    border-color: var(--bb-green);
+}
+
+.equipment-icon {
+    font-size: 2rem;
+
+    margin-bottom: 8px;
+}
+
+.equipment-card h4 {
+    color: var(--bb-green-dark);
+
+    font-family: "Architects Daughter", cursive;
+
+    font-size: 1rem;
+
+    margin-bottom: 6px;
+}
+
+.equipment-card p {
+    font-size: .7rem;
+
+    color: var(--ink-soft);
+
+    line-height: 1.4;
+}
+
+.equipment-price {
+    margin-top: 10px;
+
+    color: var(--danger);
+
+    font-weight: bold;
+
+    font-size: .78rem;
+}
+
+/* =========================================================
+   DETAIL PAGE
+   ========================================================= */
+
+.back-link {
+    display: inline-block;
+
+    margin-bottom: 15px;
+
+    color: var(--bb-green-dark);
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    border-bottom: 1px dashed var(--bb-green-dark);
+}
+
+.detail-container {
+    background: var(--paper-2);
+
+    border: 2px solid var(--ink);
+
+    box-shadow: 6px 6px 0 var(--ink);
+
+    padding: 30px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 30px;
+}
+
+.product-image-box {
+    min-height: 330px;
+
+    border: 2px dashed var(--ink);
+
+    background: var(--paper);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    padding: 20px;
+
+    text-align: center;
+}
+
+.product-image-box img {
+    width: 100%;
+
+    max-width: 420px;
+
+    height: 270px;
+
+    object-fit: contain;
+
+    background: white;
+
+    border: 1px solid #ccc;
+
+    padding: 5px;
+
+    margin-bottom: 15px;
+}
+
+.product-form-box {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+.product-form-box h3 {
+    font-family: "Special Elite", cursive;
+
+    color: var(--bb-green-dark);
+
+    font-size: 2rem;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: .8rem;
+
+    font-weight: bold;
+}
+
+.form-group select,
+.form-group input {
+    border: 2px solid var(--ink);
+
+    background: var(--paper-2);
+
+    color: var(--ink);
+
+    padding: 10px;
+
+    outline: none;
+}
+
+.detail-price {
+    color: var(--danger);
+
+    font-weight: bold;
+
+    font-size: 1.5rem;
+
+    border-top: 2px dashed var(--ink);
+
+    border-bottom: 2px dashed var(--ink);
+
+    padding: 12px 0;
+}
+
+.action-button-group {
+    display: flex;
+
+    gap: 10px;
+}
+
+/* =========================================================
+   CART
+   ========================================================= */
+
+.cart-layout {
+    display: grid;
+
+    grid-template-columns: 2fr 1fr;
+
+    gap: 20px;
+}
+
+.cart-items {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.cart-item {
+    background: var(--paper-2);
+
+    border: 2px solid var(--ink);
+
+    padding: 15px;
+
+    box-shadow: var(--shadow-small);
+
+    display: grid;
+
+    grid-template-columns: 80px 1fr auto;
+
+    align-items: center;
+
+    gap: 15px;
+}
+
+.cart-item img {
+    width: 70px;
+
+    height: 70px;
+
+    object-fit: contain;
+
+    background: white;
+
+    border: 1px solid #bbb;
+}
+
+.cart-item-info h4 {
+    font-family: "Special Elite", cursive;
+
+    color: var(--bb-green-dark);
+
+    margin-bottom: 5px;
+}
+
+.cart-item-info p {
+    font-size: .7rem;
+
+    color: var(--ink-soft);
+
+    margin-bottom: 4px;
+}
+
+.cart-controls {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin-top: 8px;
+}
+
+.qty-btn {
+    width: 28px;
+    height: 28px;
+
+    border: 2px solid var(--ink);
+
+    background: var(--hazmat);
+
+    font-weight: bold;
+}
+
+.cart-qty {
+    min-width: 35px;
+
+    text-align: center;
+
+    font-weight: bold;
+}
+
+.remove-btn {
+    border: 0;
+
+    background: transparent;
+
+    color: var(--danger);
+
+    font-weight: bold;
+}
+
+.cart-summary {
+    background: var(--paper-2);
+
+    border: 2px solid var(--ink);
+
+    padding: 20px;
+
+    box-shadow: var(--shadow);
+
+    height: fit-content;
+
+    position: sticky;
+
+    top: 20px;
+}
+
+.cart-summary h3 {
+    font-family: "Special Elite", cursive;
+
+    color: var(--bb-green-dark);
+
+    margin-bottom: 15px;
+}
+
+.summary-line {
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 8px 0;
+
+    border-bottom: 1px dotted #999;
+
+    font-size: .85rem;
+}
+
+.summary-total {
+    font-size: 1.25rem;
+
+    font-weight: bold;
+
+    color: var(--danger);
+
+    margin-top: 12px;
+}
+
+.empty-cart {
+    padding: 50px 20px;
+
+    text-align: center;
+
+    border: 2px dashed var(--ink);
+
+    background: var(--paper-2);
+}
+
+/* =========================================================
+   CHECKOUT
+   ========================================================= */
+
+.checkout-grid {
+    display: grid;
+
+    grid-template-columns: 1.4fr .8fr;
+
+    gap: 25px;
+}
+
+.checkout-form {
+    background: var(--paper-2);
+
+    border: 2px solid var(--ink);
+
+    padding: 25px;
+
+    box-shadow: var(--shadow);
+}
+
+.checkout-form h3 {
+    font-family: "Special Elite", cursive;
+
+    color: var(--bb-green-dark);
+
+    margin-bottom: 18px;
+}
+
+.checkout-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.checkout-form input,
+.checkout-form select {
+    width: 100%;
+
+    border: 2px solid var(--ink);
+
+    background: var(--paper);
+
+    color: var(--ink);
+
+    padding: 10px;
+
+    margin-bottom: 12px;
+
+    outline: none;
+}
+
+.checkout-form label {
+    font-size: .75rem;
+
+    font-weight: bold;
+
+    display: block;
+
+    margin-bottom: 5px;
+}
+
+.payment-note {
+    border: 2px dashed var(--bb-green);
+
+    padding: 12px;
+
+    background: rgba(244,208,63,.15);
+
+    font-size: .72rem;
+
+    margin-bottom: 15px;
+}
+
+.order-review {
+    background: var(--paper-2);
+
+    border: 2px solid var(--ink);
+
+    padding: 20px;
+
+    box-shadow: var(--shadow);
+
+    height: fit-content;
+}
+
+.order-review h3 {
+    font-family: "Special Elite", cursive;
+
+    color: var(--bb-green-dark);
+
+    margin-bottom: 15px;
+}
+
+.checkout-product {
+    border-bottom: 1px dotted #888;
+
+    padding: 8px 0;
+
+    font-size: .75rem;
+}
+
+/* =========================================================
+   SEARCH RESULTS
+   ========================================================= */
+
+.search-results-box {
+    background: var(--paper-2);
+
+    border: 2px solid var(--ink);
+
+    padding: 20px;
+
+    box-shadow: var(--shadow);
+
+    margin-bottom: 25px;
+}
+
+.search-results-box h2 {
+    font-family: "Special Elite", cursive;
+
+    color: var(--bb-green-dark);
+
+    margin-bottom: 15px;
+}
+
+.search-result-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill,minmax(200px,1fr));
+
+    gap: 15px;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+    background: var(--ink);
+
+    color: var(--paper);
+
+    border-top: 4px solid var(--bb-green);
+
+    padding: 30px 20px;
+
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 900px;
+
+    margin: auto;
+}
+
+.footer-quote {
+    font-family: "Special Elite", cursive;
+
+    color: var(--hazmat);
+
+    font-size: 1rem;
+
+    margin-bottom: 15px;
+}
+
+.footer-meta {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 20px;
+
+    border-top: 1px dashed #555;
+
+    border-bottom: 1px dashed #555;
+
+    padding: 12px;
+
+    font-size: .75rem;
+}
+
+.footer-meta span {
+    color: var(--hazmat);
+}
+
+.footer-copy {
+    margin-top: 12px;
+
+    font-size: .65rem;
+
+    color: #888;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width: 1050px) {
+
+    .header-search {
+        max-width: 280px;
+    }
+
+    .header-actions .btn:not(#cart-header-btn) {
+        display: none;
+    }
+}
+
+@media(max-width: 850px) {
+
+    .sidebar {
+        transform: translateX(-105%);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay.open {
+        display: block;
+    }
+
+    .mobile-menu-button {
+        display: block;
+    }
+
+    .app {
+        margin-left: 0;
+    }
+
+    header {
+        margin-top: 75px;
+    }
+
+    .logo-area {
+        margin-left: 45px;
+    }
+
+    .header-search {
+        display: none;
+    }
+
+    .detail-container,
+    .checkout-grid,
+    .cart-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-summary {
+        position: static;
+    }
+}
+
+@media(max-width: 600px) {
+
+    .container {
+        padding: 0 12px 30px;
+    }
+
+    section {
+        padding: 18px 14px;
+    }
+
+    section h2 {
+        font-size: 1.3rem;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .item-grid,
+    .equipment-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-container {
+        padding: 18px;
+    }
+
+    .product-image-box img {
+        height: 210px;
+    }
+
+    .checkout-row {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-item {
+        grid-template-columns: 65px 1fr;
+    }
+
+    .cart-item > div:last-child {
+        grid-column: 2;
+    }
+
+    .action-button-group {
+        flex-direction: column;
+    }
+
+    .logo-text p {
+        display: none;
+    }
+
+    .logo-text h1 {
+        font-size: 1.05rem;
+    }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media(prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     ANIMATED CHEMISTRY BACKGROUND
+     ===================================================== -->
+
+<div class="chemistry-background">
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+    <span class="bubble"></span>
+</div>
+
+<!-- MOBILE MENU BUTTON -->
+
+<button
+    class="mobile-menu-button"
+    id="mobile-menu-button"
+    onclick="toggleSidebar()"
+    aria-label="Open menu"
+>
+    ☰
+</button>
+
+<div
+    class="sidebar-overlay"
+    id="sidebar-overlay"
+    onclick="closeSidebar()"
+></div>
+
+<!-- =====================================================
+     SIDEBAR
+     ===================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+
+        <div class="sidebar-title">
+            Chemistry Market
+        </div>
+
+        <div class="sidebar-subtitle">
+            Laboratory Archive • 2026
+        </div>
+
+        <div class="sidebar-search">
+
+            <input
+                type="text"
+                id="sidebar-search"
+                placeholder=" e.g chemical"
+                oninput="performSearch(this.value)"
+            >
+
+            <button onclick="performSearch(
+                document.getElementById('sidebar-search').value
+            )">
+                🔍
+            </button>
+
+        </div>
+
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <div class="nav-title">
+            CATALOG
+        </div>
+
+        <button
+            class="side-option active"
+            id="nav-elements"
+            onclick="showView('home')"
+        >
+            <span class="nav-icon">⚗️</span>
+            Chemical Elements
+        </button>
+
+        <button
+            class="side-option"
+            id="nav-equipment"
+            onclick="showView('equipment')"
+        >
+            <span class="nav-icon">🧪</span>
+            Lab Equipment
+        </button>
+
+        <div class="nav-title">
+            LABORATORY
+        </div>
+
+        <button
+            class="side-option"
+            onclick="showView('cart')"
+        >
+            <span class="nav-icon">🛒</span>
+            Laboratory Cart
+            <span id="sidebar-cart-count">[0]</span>
+        </button>
+
+    </nav>
+
+    <div class="sidebar-footer">
+
+        <button
+            class="dark-mode-toggle"
+            onclick="toggleDarkMode()"
+            id="dark-mode-button"
+        >
+            🌙 Dark Laboratory Mode
+        </button>
+
+        <div class="sidebar-note">
+            "Science is organized knowledge.
+            Wisdom is organized life."
+        </div>
+
+    </div>
+
+</aside>
+
+<!-- =====================================================
+     APPLICATION
+     ===================================================== -->
+
+<div class="app">
+
+<!-- =====================================================
+     HEADER
+     ===================================================== -->
+
+<header>
+
+    <div
+        class="logo-area"
+        onclick="showView('home')"
+    >
+
+        <div class="periodic-badge">
+            Ba
+        </div>
+
+        <div class="logo-text">
+
+            <h1>
+                Chemistry Archive
+            </h1>
+
+            <p>
+                Pure Elements & Chemistry Apparatus Supply
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="header-search">
+
+        <input
+            type="text"
+            id="header-search"
+            placeholder="Search element, formula, glassware..."
+            oninput="performSearch(this.value)"
+        >
+
+        <button
+            onclick="performSearch(
+                document.getElementById('header-search').value
+            )"
+        >
+            🔍
+        </button>
+
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            class="btn"
+            onclick="showView('equipment')"
+        >
+            ⚗️ Equipment
+        </button>
+
+        <button
+            class="btn green"
+            id="cart-header-btn"
+            onclick="showView('cart')"
+        >
+            Cart [0]
+        </button>
+
+    </div>
+
+</header>
+
+<!-- =====================================================
+     MAIN CONTENT
+     ===================================================== -->
+
+<main class="container">
+
+<!-- =====================================================
+     SEARCH VIEW
+     ===================================================== -->
+
+<div
+    id="search-view"
+    class="view"
+>
+
+    <div class="search-results-box">
+
+        <h2 id="search-title">
+            Search Results
+        </h2>
+
+        <div
+            id="search-results"
+            class="search-result-grid"
+        ></div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     HOME / CHEMICAL ELEMENTS
+     ===================================================== -->
+
+<div
+    id="home-view"
+    class="view active"
+>
+
+<section>
+
+<h2>
+    Popular Items
+
+    <span class="section-label">
+        High Demand Pure Stock
+    </span>
+</h2>
+
+<div
+    class="item-grid"
+    id="popular-grid"
+></div>
+
+</section>
+
+
+<section>
+
+<h2>
+    Recommended Items
+
+    <span class="section-label">
+        Curated Laboratory Grade & Rare Finds
+    </span>
+</h2>
+
+<div
+    class="item-grid"
+    id="recommended-grid"
+></div>
+
+</section>
+
+
+<section>
+
+<h2>
+    In Stock Inventory
+
+    <span class="section-label">
+        Ready for Dispatch
+    </span>
+</h2>
+
+<div
+    class="item-grid"
+    id="stock-grid"
+></div>
+
+</section>
+
+</div>
+
+<!-- =====================================================
+     EQUIPMENT VIEW
+     ===================================================== -->
+
+<div
+    id="equipment-view"
+    class="view"
+>
+
+<section>
+
+<h2>
+    🧰 Lab Equipment
+
+    <span class="section-label">
+        Laboratory Apparatus Archive
+    </span>
+</h2>
+
+<div id="equipment-container"></div>
+
+</section>
+
+</div>
+
+<!-- =====================================================
+     PRODUCT DETAIL
+     ===================================================== -->
+
+<div
+    id="detail-view"
+    class="view"
+>
+
+<a
+    class="back-link"
+    onclick="goBackFromDetail()"
+>
+    ← Back to Catalog
+</a>
+
+<div class="detail-container">
+
+    <div class="product-image-box">
+
+        <img
+            id="detail-img"
+            src=""
+            alt="Product image"
+        >
+
+        <div
+            id="detail-symbol-tag"
+            style="
+                font-family:'Special Elite';
+                font-size:1.2rem;
+                color:var(--bb-green-dark);
+            "
+        >
+        </div>
+
+        <p
+            style="
+                font-size:.7rem;
+                color:var(--ink-soft);
+            "
+        >
+            Laboratory product display
+        </p>
+
+    </div>
+
+
+    <div class="product-form-box">
+
+        <h3 id="detail-name">
+            Product
+        </h3>
+
+        <div
+            id="detail-num-mass"
+            style="
+                font-size:.8rem;
+                color:var(--ink-soft);
+            "
+        >
+        </div>
+
+        <p
+            id="detail-description"
+            class="el-info"
+        >
+        </p>
+
+
+        <div class="form-group">
+
+            <label>
+                Choose Variety / Version:
+            </label>
+
+            <select
+                id="variant-select"
+                onchange="updatePriceCalculation()"
+            ></select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Quantity:
+            </label>
+
+            <input
+                type="number"
+                id="quantity-input"
+                min="1"
+                max="100"
+                value="1"
+                onchange="updatePriceCalculation()"
+            >
+
+        </div>
+
+
+        <div
+            class="detail-price"
+            id="detail-total-price"
+        >
+            $0.00 USD
+        </div>
+
+
+        <div class="action-button-group">
+
+            <button
+                class="btn gray"
+                onclick="addToCartAction()"
+            >
+                🛒 Add to Cart
+            </button>
+
+            <button
+                class="btn green"
+                onclick="buyNowAction()"
+            >
+                Purchase / Checkout
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- =====================================================
+     CART VIEW
+     ===================================================== -->
+
+<div
+    id="cart-view"
+    class="view"
+>
+
+<section>
+
+<h2>
+    🛒 Laboratory Cart
+
+    <span class="section-label">
+        Your Selected Items
+    </span>
+</h2>
+
+<div class="cart-layout">
+
+    <div
+        class="cart-items"
+        id="cart-items"
+    ></div>
+
+    <div class="cart-summary">
+
+        <h3>
+            Order Summary
+        </h3>
+
+        <div class="summary-line">
+            <span>Items</span>
+            <span id="summary-items">0</span>
+        </div>
+
+        <div class="summary-line">
+            <span>Subtotal</span>
+            <span id="summary-subtotal">$0.00</span>
+        </div>
+
+        <div class="summary-line">
+            <span>Handling</span>
+            <span id="summary-handling">$0.00</span>
+        </div>
+
+        <div class="summary-line">
+            <span>Estimated Total</span>
+            <span
+                class="summary-total"
+                id="summary-total"
+            >
+                $0.00
+            </span>
+        </div>
+
+        <button
+            class="btn green"
+            style="width:100%;margin-top:15px;"
+            onclick="showCheckout()"
+        >
+            Continue to Checkout →
+        </button>
+
+        <button
+            class="btn"
+            style="width:100%;margin-top:10px;"
+            onclick="clearCart()"
+        >
+            Clear Cart
+        </button>
+
+    </div>
+
+</div>
+
+</section>
+
+</div>
+
+<!-- =====================================================
+     CHECKOUT VIEW
+     ===================================================== -->
+
+<div
+    id="checkout-view"
+    class="view"
+>
+
+<section>
+
+<h2>
+    💳 Checkout
+
+    <span class="section-label">
+        Secure Demo Checkout
+    </span>
+</h2>
+
+<div class="checkout-grid">
+
+<div class="checkout-form">
+
+<h3>
+    Customer Information
+</h3>
+
+<div class="checkout-row">
+
+<div>
+<label>First Name</label>
+<input
+    type="text"
+    id="first-name"
+    placeholder="Walter"
+>
+</div>
+
+<div>
+<label>Last Name</label>
+<input
+    type="text"
+    id="last-name"
+    placeholder="White"
+>
+</div>
+
+</div>
+
+<label>Email Address</label>
+<input
+    type="email"
+    id="email"
+    placeholder="example@email.com"
+>
+
+<label>Shipping / Laboratory Address</label>
+<input
+    type="text"
+    id="address"
+    placeholder="Laboratory address"
+>
+
+<div class="checkout-row">
+
+<div>
+<label>City</label>
+<input
+    type="text"
+    id="city"
+    placeholder="City"
+>
+</div>
+
+<div>
+<label>Postal Code</label>
+<input
+    type="text"
+    id="postal"
+    placeholder="Postal code"
+>
+</div>
+
+</div>
+
+<h3>
+    Payment Information
+</h3>
+
+<div class="payment-note">
+    ⚠️ Demo payment interface only.
+    No real payment is processed by this page.
+</div>
+
+<label>Cardholder Name</label>
+<input
+    type="text"
+    placeholder="Cardholder name"
+>
+
+<label>Card Number</label>
+<input
+    type="text"
+    maxlength="19"
+    placeholder="0000 0000 0000 0000"
+>
+
+<div class="checkout-row">
+
+<div>
+<label>Expiry</label>
+<input
+    type="text"
+    placeholder="MM/YY"
+>
+</div>
+
+<div>
+<label>CVV</label>
+<input
+    type="password"
+    maxlength="4"
+    placeholder="•••"
+>
+</div>
+
+</div>
+
+<button
+    class="btn green"
+    style="width:100%;padding:13px;"
+    onclick="placeDemoOrder()"
+>
+    🧪 Place Demo Order
+</button>
+
+</div>
+
+
+<div class="order-review">
+
+<h3>
+    Order Review
+</h3>
+
+<div id="checkout-items"></div>
+
+<div class="summary-line">
+    <span>Subtotal</span>
+    <span id="checkout-subtotal">$0.00</span>
+</div>
+
+<div class="summary-line">
+    <span>Handling</span>
+    <span>$5.00</span>
+</div>
+
+<div class="summary-line">
+    <strong>Total</strong>
+
+    <strong
+        class="summary-total"
+        id="checkout-total"
+    >
+        $0.00
+    </strong>
+</div>
+
+<button
+    class="btn"
+    style="width:100%;margin-top:15px;"
+    onclick="showView('cart')"
+>
+    ← Return to Cart
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
+<footer>
+
+<div class="footer-content">
+
+<div class="footer-quote">
+    "Chemistry is the study of change,
+    but this shop is pure consistency."
+</div>
+
+<div class="footer-meta">
+
+<div>
+    Co-created with:
+    <span>Dos Da</span>
+</div>
+
+<div>
+    Founded in:
+    <span>2026</span>
+</div>
+
+<div>
+    Customer Support:
+    <span>011 317071</span>
+</div>
+
+</div>
+
+<div class="footer-copy">
+
+© 2026 Chemistry Market.
+Laboratory catalog demonstration interface.
+
+</div>
+
+</div>
+
+</footer>
+
+</main>
+
+</div>
+
+<script>
+
+/* =========================================================
+   CHEMICAL DATABASE
+   ========================================================= */
+
+const elementsData = {
+
+"O": {
+number:8,
+mass:"15.999",
+name:"Oxygen",
+desc:"Highly reactive nonmetal. Essential for combustion processes and respiration.",
+basePrice:45,
+unit:"tank",
+variants:[
+{name:"Standard Gas Cylinder",multiplier:1},
+{name:"Ultra-High Purity",multiplier:1.5},
+{name:"Compressed Liquid Flask",multiplier:1.8}
+],
+image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Liquid_oxygen_in_a_beaker_%28cropped_and_retouched%29.jpg/250px-Liquid_oxygen_in_a_beaker_%28cropped_and_retouched%29.jpg"
+},
+
+"C":{
+number:6,
+mass:"12.011",
+name:"Carbon",
+desc:"The backbone of organic chemistry. Available in several structural forms.",
+basePrice:30,
+unit:"kg",
+variants:[
+{name:"Amorphous Powder",multiplier:1},
+{name:"Graphite Rods",multiplier:1.3},
+{name:"Synthetic Diamond Grade",multiplier:3.5}
+],
+image:"https://static.dezeen.com/uploads/2021/06/Dezeen-guide-to-carbon_01-sq.jpg"
+},
+
+"Fe":{
+number:26,
+mass:"55.845",
+name:"Iron",
+desc:"Sturdy transition metal widely used for structural and industrial applications.",
+basePrice:15,
+unit:"ingot",
+variants:[
+{name:"Industrial Ingot",multiplier:1},
+{name:"Electrolytic Flakes",multiplier:1.4},
+{name:"High-Purity Rod",multiplier:1.7}
+],
+image:"https://www.thoughtco.com/thmb/ekfURNsa6OPgqM7OIqiF5leabwc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-157526585-93425538070d4422ad42d22af28c0758.jpg"
+},
+
+"Cu":{
+number:29,
+mass:"63.546",
+name:"Copper",
+desc:"Excellent thermal and electrical conductor with distinctive reddish-brown appearance.",
+basePrice:25,
+unit:"spool",
+variants:[
+{name:"Copper Wire Spool",multiplier:1},
+{name:"Pure Metal Turnings",multiplier:1.2},
+{name:"Solid Block",multiplier:1.5}
+],
+image:"https://upload.wikimedia.org/wikipedia/commons/f/f0/NatCopper.jpg"
+},
+
+"H":{
+number:1,
+mass:"1.008",
+name:"Hydrogen",
+desc:"Lightest element in the universe and a highly flammable gas.",
+basePrice:50,
+unit:"cylinder",
+variants:[
+{name:"Standard Compressed Cylinder",multiplier:1},
+{name:"Specialty Isotope Variant",multiplier:2.2},
+{name:"Liquid Dewar Flask",multiplier:2.8}
+],
+image:"https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80"
+},
+
+"Ce":{
+number:58,
+mass:"140.11",
+name:"Cerium",
+desc:"Soft rare-earth metal used in metallurgy and glass polishing.",
+basePrice:120,
+unit:"100g",
+variants:[
+{name:"Metal Ingots",multiplier:1},
+{name:"Polishing Oxide Powder",multiplier:.8},
+{name:"Specialty Grade",multiplier:1.2}
+],
+image:"https://www.azom.com/images/Article_Thumbs/ThumbForArticle_592_16805210021268074.jpg"
+},
+
+"He":{
+number:2,
+mass:"4.0026",
+name:"Helium",
+desc:"Colorless inert noble gas with important cryogenic applications.",
+basePrice:85,
+unit:"tank",
+variants:[
+{name:"Standard Grade Tank",multiplier:1},
+{name:"Ultra-Pure Laboratory Grade",multiplier:2.5}
+],
+image:"https://peguys.com/cdn/shop/products/He-lit-up-good_800x.jpg"
+},
+
+"Hg":{
+number:80,
+mass:"200.59",
+name:"Mercury",
+desc:"Dense metallic element that is liquid under standard conditions.",
+basePrice:210,
+unit:"flask",
+variants:[
+{name:"Sealed Laboratory Flask",multiplier:1},
+{name:"Laboratory Grade",multiplier:.85}
+],
+image:"https://cdn.britannica.com/91/150291-050-675525C7/mercury-beads-glass-container.jpg"
+},
+
+"Pu":{
+number:94,
+mass:"[244]",
+name:"Plutonium",
+desc:"Radioactive actinide requiring specialized regulatory controls.",
+basePrice:4500,
+unit:"gram",
+variants:[
+{name:"Regulated Research Form",multiplier:1},
+{name:"Special Research Alloy",multiplier:1.3}
+],
+image:"https://periodictable.com/Samples/094.x1/s13.JPG"
+},
+
+"Ca":{
+number:20,
+mass:"40.078",
+name:"Calcium",
+desc:"Reactive alkaline earth metal used in specialized chemical processes.",
+basePrice:22,
+unit:"pack",
+variants:[
+{name:"Turnings / Chips",multiplier:1},
+{name:"Granular Form",multiplier:1.1}
+],
+image:"https://cdn.britannica.com/94/176094-050-40C6CB53/Calcite-calcium-carbonate-variety-crystals-development.jpg"
+},
+
+"Na":{
+number:11,
+mass:"22.990",
+name:"Sodium",
+desc:"Soft, reactive alkali metal commonly supplied in protected containers.",
+basePrice:20,
+unit:"bottle",
+variants:[
+{name:"Protected Laboratory Form",multiplier:1},
+{name:"Sealed Ampoule",multiplier:1.3}
+],
+image:"https://cdn.mos.cms.futurecdn.net/v2/t:0,l:40,cw:365,ch:365,q:80,w:365/8pDG4b4Y8tF3TdUBCxe5YC.jpg"
+},
+
+"Bi":{
+number:83,
+mass:"208.98",
+name:"Bismuth",
+desc:"Brittle metal famous for its colorful crystalline appearance.",
+basePrice:28,
+unit:"crystal",
+variants:[
+{name:"Iridescent Crystal",multiplier:1.2},
+{name:"Standard Ingot",multiplier:1}
+],
+image:"https://d1ymz67w5raq8g.cloudfront.net/Pictures/1024x536/9/2/9/108929_eic0614_elements_630m.jpg"
+},
+
+"Al":{
+number:13,
+mass:"26.982",
+name:"Aluminum",
+desc:"Low-density metal with excellent corrosion resistance.",
+basePrice:12,
+unit:"sheet",
+variants:[
+{name:"High Purity Sheet",multiplier:1},
+{name:"Bar Stock",multiplier:1.2}
+],
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5d/Aluminium-4.jpg"
+},
+
+"Ge":{
+number:32,
+mass:"72.630",
+name:"Germanium",
+desc:"Grayish-white metalloid important in semiconductor technology.",
+basePrice:65,
+unit:"chunk",
+variants:[
+{name:"Polished Crystal",multiplier:1},
+{name:"Single Crystal Wafer",multiplier:2}
+],
+image:"https://upload.wikimedia.org/wikipedia/commons/0/08/Polycrystalline-germanium.jpg"
+},
+
+"Ga":{
+number:31,
+mass:"69.723",
+name:"Gallium",
+desc:"Soft metal with a low melting point.",
+basePrice:50,
+unit:"vial",
+variants:[
+{name:"High Purity Vial",multiplier:1}
+],
+image:"https://prochemonline.com/wp-content/uploads/2025/03/Gallium-Element-Info.jpg"
+},
+
+"Xe":{
+number:54,
+mass:"131.29",
+name:"Xenon",
+desc:"Heavy noble gas used in specialized lighting and scientific applications.",
+basePrice:95,
+unit:"cylinder",
+variants:[
+{name:"Standard Cylinder",multiplier:1}
+],
+image:"https://theodoregray.com/periodictable/Samples/054/s15s.JPG"
+},
+
+"Ne":{
+number:10,
+mass:"20.180",
+name:"Neon",
+desc:"Noble gas famous for its bright reddish-orange glow.",
+basePrice:40,
+unit:"cylinder",
+variants:[
+{name:"Standard Gas Cylinder",multiplier:1}
+],
+image:"https://images-of-elements.com/neon-3.jpg"
+},
+
+"Os":{
+number:76,
+mass:"190.23",
+name:"Osmium",
+desc:"Dense transition metal belonging to the platinum group.",
+basePrice:400,
+unit:"gram",
+variants:[
+{name:"Crystal Bead Form",multiplier:1}
+],
+image:"https://www.thoughtco.com/thmb/7zqVPsQOztIJwxb87-QkMj_4b-o=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/osmium-crystals-56a12a6f3df78cf7726806a0.jpg"
+},
+
+"Re":{
+number:75,
+mass:"186.21",
+name:"Rhenium",
+desc:"Heavy transition metal with a very high melting point.",
+basePrice:180,
+unit:"gram",
+variants:[
+{name:"Pellet / Rod",multiplier:1}
+],
+image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9AAeJrmQWOQ40HE5kzVO0yFEKA5lPgNn8YL2Pz0AX08O8JSKJlt0H0L8&s=10"
+},
+
+"Nb":{
+number:41,
+mass:"92.906",
+name:"Niobium",
+desc:"Ductile transition metal used in specialty steels and superconducting applications.",
+basePrice:55,
+unit:"ingot",
+variants:[
+{name:"Superconducting Grade",multiplier:1.3},
+{name:"Standard Ingot",multiplier:1}
+],
+image:"https://7cad390533514c32acc8-75d23ce06fcfaf780446d85d50c33f7b.ssl.cf6.rackcdn.com/arm/uploads/2020/04/Uses_of_Niobium.jpg"
+}
+
+};
+
+/* =========================================================
+   LAB EQUIPMENT DATABASE
+   ========================================================= */
+
+const equipmentData = {
+
+"beakers":{
+name:"Beakers",
+category:"🧪 Basic Glassware",
+desc:"General-purpose laboratory vessels available in multiple capacities.",
+basePrice:8,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/3/3d/Beakers.jpg",
+variants:[
+{name:"50 mL Set",multiplier:1},
+{name:"250 mL Set",multiplier:1.3},
+{name:"1 L Set",multiplier:1.8},
+{name:"2 L Set",multiplier:2.3}
+]
+},
+
+"erlenmeyer":{
+name:"Erlenmeyer Flasks",
+category:"🧪 Basic Glassware",
+desc:"Conical laboratory flasks suitable for mixing and general laboratory work.",
+basePrice:10,
+unit:"flask",
+image:"https://upload.wikimedia.org/wikipedia/commons/1/1f/Erlenmeyer_flask.jpg",
+variants:[
+{name:"100 mL",multiplier:1},
+{name:"250 mL",multiplier:1.2},
+{name:"500 mL",multiplier:1.5},
+{name:"1 L",multiplier:2}
+]
+},
+
+"volumetric":{
+name:"Volumetric Flasks",
+category:"🧪 Basic Glassware",
+desc:"Precision glassware designed for preparing solutions to a defined volume.",
+basePrice:14,
+unit:"flask",
+image:"https://upload.wikimedia.org/wikipedia/commons/7/76/Volumetric_flask.jpg",
+variants:[
+{name:"50 mL",multiplier:1},
+{name:"100 mL",multiplier:1.2},
+{name:"500 mL",multiplier:1.7},
+{name:"1 L",multiplier:2}
+]
+},
+
+"graduated":{
+name:"Graduated Cylinders",
+category:"🧪 Basic Glassware",
+desc:"Graduated vessels for measuring liquid volumes.",
+basePrice:12,
+unit:"cylinder",
+image:"https://upload.wikimedia.org/wikipedia/commons/4/4b/Graduated_cylinders.jpg",
+variants:[
+{name:"50 mL",multiplier:1},
+{name:"100 mL",multiplier:1.2},
+{name:"500 mL",multiplier:1.6},
+{name:"1 L",multiplier:2}
+]
+},
+
+"test-tubes":{
+name:"Test Tubes & Racks",
+category:"🧪 Basic Glassware",
+desc:"General-purpose sample vessels supplied with compatible laboratory racks.",
+basePrice:18,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5d/Test_tubes.jpg",
+variants:[
+{name:"10 Tube Set",multiplier:1},
+{name:"25 Tube Set",multiplier:1.8},
+{name:"50 Tube Set",multiplier:3}
+]
+},
+
+"watch-glasses":{
+name:"Watch Glasses",
+category:"🧪 Basic Glassware",
+desc:"Small laboratory glass dishes useful for covering vessels and evaporative work.",
+basePrice:9,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/8/82/Watch_glass.jpg",
+variants:[
+{name:"Small Set",multiplier:1},
+{name:"Large Set",multiplier:1.5}
+]
+},
+
+"stirring-rods":{
+name:"Glass Stirring Rods",
+category:"🧪 Basic Glassware",
+desc:"Smooth glass rods for manual laboratory stirring.",
+basePrice:7,
+unit:"pack",
+image:"https://upload.wikimedia.org/wikipedia/commons/2/2f/Glass_stirring_rods.jpg",
+variants:[
+{name:"Pack of 5",multiplier:1},
+{name:"Pack of 10",multiplier:1.7}
+]
+},
+
+"reagent-bottles":{
+name:"Reagent Bottles",
+category:"🧪 Basic Glassware",
+desc:"Laboratory bottles designed for organized storage of reagents.",
+basePrice:11,
+unit:"bottle",
+image:"https://upload.wikimedia.org/wikipedia/commons/8/89/Reagent_bottles.jpg",
+variants:[
+{name:"100 mL",multiplier:1},
+{name:"500 mL",multiplier:1.5},
+{name:"1 L",multiplier:2}
+]
+},
+
+"pipettes":{
+name:"Droppers / Pasteur Pipettes",
+category:"🧪 Basic Glassware",
+desc:"Small-volume liquid transfer tools for laboratory work.",
+basePrice:6,
+unit:"pack",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5e/Pasteur_pipette.jpg",
+variants:[
+{name:"Pack of 10",multiplier:1},
+{name:"Pack of 25",multiplier:2},
+{name:"Pack of 50",multiplier:3.5}
+]
+},
+
+"analytical-balance":{
+name:"Analytical Balance",
+category:"📏 Measuring & Dispensing",
+desc:"Precision laboratory balance for analytical measurements.",
+basePrice:480,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5d/Analytical_balance.jpg",
+variants:[
+{name:"Standard Laboratory Model",multiplier:1},
+{name:"High Precision Model",multiplier:1.7}
+]
+},
+
+"top-balance":{
+name:"Top-Loading Balance",
+category:"📏 Measuring & Dispensing",
+desc:"General laboratory balance for routine measurements.",
+basePrice:280,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/7/7a/Laboratory_balance.jpg",
+variants:[
+{name:"Standard Model",multiplier:1},
+{name:"Precision Model",multiplier:1.5}
+]
+},
+
+"micropipettes":{
+name:"Micropipettes & Tips",
+category:"📏 Measuring & Dispensing",
+desc:"Adjustable-volume liquid handling equipment.",
+basePrice:75,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5b/Micropipette.jpg",
+variants:[
+{name:"Single Pipette",multiplier:1},
+{name:"Pipette + Tip Starter Set",multiplier:1.8},
+{name:"Three-Pipette Set",multiplier:3}
+]
+},
+
+"burettes":{
+name:"Burettes",
+category:"📏 Measuring & Dispensing",
+desc:"Graduated laboratory apparatus for controlled liquid dispensing.",
+basePrice:35,
+unit:"burette",
+image:"https://upload.wikimedia.org/wikipedia/commons/2/24/Burette.jpg",
+variants:[
+{name:"25 mL",multiplier:1},
+{name:"50 mL",multiplier:1.3}
+]
+},
+
+"pipette-fillers":{
+name:"Pipette Fillers",
+category:"📏 Measuring & Dispensing",
+desc:"Manual aids for controlled pipette filling.",
+basePrice:18,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/1/1d/Pipette_filler.jpg",
+variants:[
+{name:"Standard",multiplier:1},
+{name:"Premium",multiplier:1.5}
+]
+},
+
+"thermometers":{
+name:"Thermometers / Temperature Probes",
+category:"📏 Measuring & Dispensing",
+desc:"Temperature monitoring instruments for laboratory environments.",
+basePrice:30,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5c/Laboratory_thermometer.jpg",
+variants:[
+{name:"Digital Thermometer",multiplier:1},
+{name:"Probe System",multiplier:1.7}
+]
+},
+
+"ph-meter":{
+name:"pH Meter",
+category:"📏 Measuring & Dispensing",
+desc:"Electronic instrument for measuring solution acidity and alkalinity.",
+basePrice:95,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/8/87/PH_meter.jpg",
+variants:[
+{name:"Basic Laboratory Model",multiplier:1},
+{name:"Advanced Bench Model",multiplier:2}
+]
+},
+
+"stopwatch":{
+name:"Stopwatch / Timer",
+category:"📏 Measuring & Dispensing",
+desc:"Digital timing instrument for laboratory procedures.",
+basePrice:12,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/3/3b/Stopwatch.jpg",
+variants:[
+{name:"Digital Timer",multiplier:1},
+{name:"Multi-Function Timer",multiplier:1.5}
+]
+},
+
+"hotplate":{
+name:"Hot Plates / Stirrers",
+category:"🔥 Heating & Mixing",
+desc:"Laboratory heating and stirring equipment.",
+basePrice:120,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/8/87/Magnetic_stirrer.jpg",
+variants:[
+{name:"Hot Plate",multiplier:1},
+{name:"Magnetic Stirrer",multiplier:1.4},
+{name:"Combined Hotplate Stirrer",multiplier:1.8}
+]
+},
+
+"stir-bars":{
+name:"Magnetic Stir Bars",
+category:"🔥 Heating & Mixing",
+desc:"Magnetic stirring accessories in several sizes.",
+basePrice:10,
+unit:"pack",
+image:"https://upload.wikimedia.org/wikipedia/commons/8/89/Magnetic_stir_bar.jpg",
+variants:[
+{name:"Small Pack",multiplier:1},
+{name:"Large Pack",multiplier:1.7}
+]
+},
+
+"heating-mantle":{
+name:"Heating Mantles",
+category:"🔥 Heating & Mixing",
+desc:"Controlled heating equipment for compatible laboratory vessels.",
+basePrice:150,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5f/Heating_mantle.jpg",
+variants:[
+{name:"250 mL",multiplier:1},
+{name:"500 mL",multiplier:1.3},
+{name:"1 L",multiplier:1.7}
+]
+},
+
+"water-bath":{
+name:"Water Bath",
+category:"🔥 Heating & Mixing",
+desc:"Temperature-controlled bath for gentle sample heating.",
+basePrice:180,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/3/3f/Water_bath.jpg",
+variants:[
+{name:"Compact Model",multiplier:1},
+{name:"Large Laboratory Model",multiplier:1.7}
+]
+},
+
+"oven":{
+name:"Laboratory Oven",
+category:"🔥 Heating & Mixing",
+desc:"Controlled-temperature laboratory heating chamber.",
+basePrice:600,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/7/72/Laboratory_oven.jpg",
+variants:[
+{name:"Compact Oven",multiplier:1},
+{name:"Large Capacity Oven",multiplier:1.8}
+]
+},
+
+"ice-bath":{
+name:"Ice Bath Supplies",
+category:"🔥 Heating & Mixing",
+desc:"Basic supplies for controlled low-temperature laboratory work.",
+basePrice:20,
+unit:"kit",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5d/Ice_bucket.jpg",
+variants:[
+{name:"Basic Kit",multiplier:1},
+{name:"Insulated Kit",multiplier:1.6}
+]
+},
+
+"spatulas":{
+name:"Spatulas / Scoopulas",
+category:"🧰 General Lab Tools",
+desc:"Small tools for transferring solid laboratory materials.",
+basePrice:9,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/3/3f/Laboratory_spatulas.jpg",
+variants:[
+{name:"Stainless Set",multiplier:1},
+{name:"Premium Set",multiplier:1.6}
+]
+},
+
+"forceps":{
+name:"Forceps & Tongs",
+category:"🧰 General Lab Tools",
+desc:"Precision handling tools for laboratory objects.",
+basePrice:15,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/7/7e/Laboratory_forceps.jpg",
+variants:[
+{name:"Basic Set",multiplier:1},
+{name:"Heat-Resistant Set",multiplier:1.7}
+]
+},
+
+"funnels":{
+name:"Funnels",
+category:"🧰 General Lab Tools",
+desc:"Laboratory funnels for controlled transfer and filtration.",
+basePrice:8,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/3/3a/Laboratory_funnel.jpg",
+variants:[
+{name:"Glass Set",multiplier:1},
+{name:"Mixed Size Set",multiplier:1.5}
+]
+},
+
+"filter-paper":{
+name:"Filter Paper",
+category:"🧰 General Lab Tools",
+desc:"Disposable laboratory filtration media.",
+basePrice:12,
+unit:"pack",
+image:"https://upload.wikimedia.org/wikipedia/commons/8/83/Filter_paper.jpg",
+variants:[
+{name:"Standard Pack",multiplier:1},
+{name:"Fine Filtration Pack",multiplier:1.5}
+]
+},
+
+"wash-bottles":{
+name:"Wash Bottles",
+category:"🧰 General Lab Tools",
+desc:"Squeeze bottles for controlled dispensing of compatible liquids.",
+basePrice:8,
+unit:"bottle",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5a/Wash_bottle.jpg",
+variants:[
+{name:"250 mL",multiplier:1},
+{name:"500 mL",multiplier:1.3}
+]
+},
+
+"mortar":{
+name:"Mortar & Pestle",
+category:"🧰 General Lab Tools",
+desc:"Manual grinding apparatus for laboratory sample preparation.",
+basePrice:30,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/2/2c/Mortar_and_pestle.jpg",
+variants:[
+{name:"Ceramic Set",multiplier:1},
+{name:"Heavy-Duty Set",multiplier:1.7}
+]
+},
+
+"clamps":{
+name:"Clamps, Stands & Rings",
+category:"🧰 General Lab Tools",
+desc:"Support equipment for securing laboratory apparatus.",
+basePrice:40,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/2/24/Laboratory_stand.jpg",
+variants:[
+{name:"Basic Stand Set",multiplier:1},
+{name:"Complete Support Set",multiplier:2}
+]
+},
+
+"rubber-tubing":{
+name:"Rubber Tubing",
+category:"🧰 General Lab Tools",
+desc:"Flexible laboratory tubing for compatible apparatus.",
+basePrice:15,
+unit:"roll",
+image:"https://upload.wikimedia.org/wikipedia/commons/7/7b/Rubber_tubing.jpg",
+variants:[
+{name:"1 Meter",multiplier:1},
+{name:"5 Meter Roll",multiplier:3}
+]
+},
+
+"fume-hood":{
+name:"Chemical Fume Hood",
+category:"🔬 More Advanced Equipment",
+desc:"Laboratory ventilation equipment intended for controlled handling of chemical vapors.",
+basePrice:2500,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/7/7e/Fume_hood.jpg",
+variants:[
+{name:"Bench Model",multiplier:1},
+{name:"Large Laboratory Model",multiplier:1.8}
+]
+},
+
+"vacuum-filtration":{
+name:"Vacuum Filtration Setup",
+category:"🔬 More Advanced Equipment",
+desc:"Filtration apparatus for compatible laboratory processes.",
+basePrice:160,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/8/8a/Vacuum_filtration.jpg",
+variants:[
+{name:"Basic Setup",multiplier:1},
+{name:"Complete Glassware Setup",multiplier:1.7}
+]
+},
+
+"rotary-evaporator":{
+name:"Rotary Evaporator",
+category:"🔬 More Advanced Equipment",
+desc:"Laboratory instrument used for controlled solvent evaporation.",
+basePrice:1800,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/4/4b/Rotary_evaporator.jpg",
+variants:[
+{name:"Basic System",multiplier:1},
+{name:"Complete System",multiplier:1.8}
+]
+},
+
+"centrifuge":{
+name:"Centrifuge",
+category:"🔬 More Advanced Equipment",
+desc:"Laboratory centrifugation equipment for compatible sample separation.",
+basePrice:700,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/2/21/Laboratory_centrifuge.jpg",
+variants:[
+{name:"Compact Model",multiplier:1},
+{name:"Bench Model",multiplier:1.6}
+]
+},
+
+"uv-vis":{
+name:"UV-Vis Spectrophotometer",
+category:"🔬 More Advanced Equipment",
+desc:"Optical laboratory instrument for analytical measurements.",
+basePrice:3200,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5f/UV-Vis_spectrophotometer.jpg",
+variants:[
+{name:"Basic System",multiplier:1},
+{name:"Research System",multiplier:1.8}
+]
+},
+
+"conductivity":{
+name:"Conductivity Meter",
+category:"🔬 More Advanced Equipment",
+desc:"Instrument for measuring electrical conductivity of compatible solutions.",
+basePrice:180,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/7/7e/Conductivity_meter.jpg",
+variants:[
+{name:"Portable Model",multiplier:1},
+{name:"Bench Model",multiplier:1.6}
+]
+},
+
+"melting-point":{
+name:"Melting-Point Apparatus",
+category:"🔬 More Advanced Equipment",
+desc:"Instrument used for laboratory determination of melting points.",
+basePrice:240,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/2/2d/Melting_point_apparatus.jpg",
+variants:[
+{name:"Digital Model",multiplier:1},
+{name:"Advanced Model",multiplier:1.6}
+]
+},
+
+"distillation":{
+name:"Distillation Apparatus",
+category:"🔬 More Advanced Equipment",
+desc:"Glassware system for laboratory distillation procedures.",
+basePrice:190,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/1/19/Distillation_apparatus.jpg",
+variants:[
+{name:"Basic Glass Set",multiplier:1},
+{name:"Complete Set",multiplier:1.8}
+]
+},
+
+"gc":{
+name:"Gas Chromatography System",
+category:"🔬 More Advanced Equipment",
+desc:"Advanced analytical instrumentation for laboratory chromatography.",
+basePrice:7000,
+unit:"system",
+image:"https://upload.wikimedia.org/wikipedia/commons/7/7c/Gas_chromatography.jpg",
+variants:[
+{name:"Laboratory System",multiplier:1},
+{name:"Research System",multiplier:1.7}
+]
+},
+
+"hplc":{
+name:"High-Performance Liquid Chromatography",
+category:"🔬 More Advanced Equipment",
+desc:"Advanced analytical laboratory instrumentation.",
+basePrice:9000,
+unit:"system",
+image:"https://upload.wikimedia.org/wikipedia/commons/4/4d/HPLC.jpg",
+variants:[
+{name:"Standard System",multiplier:1},
+{name:"Research System",multiplier:1.8}
+]
+},
+
+"goggles":{
+name:"Safety Goggles",
+category:"🦺 Safety Equipment — Essential",
+desc:"Protective eyewear for appropriate laboratory environments.",
+basePrice:12,
+unit:"pair",
+image:"https://upload.wikimedia.org/wikipedia/commons/6/6e/Safety_goggles.jpg",
+variants:[
+{name:"Standard Pair",multiplier:1},
+{name:"Anti-Fog Pair",multiplier:1.4}
+]
+},
+
+"lab-coat":{
+name:"Lab Coats / Aprons",
+category:"🦺 Safety Equipment — Essential",
+desc:"Laboratory protective clothing.",
+basePrice:25,
+unit:"coat",
+image:"https://upload.wikimedia.org/wikipedia/commons/9/9b/Lab_coat.jpg",
+variants:[
+{name:"Standard Coat",multiplier:1},
+{name:"Heavy-Duty Apron",multiplier:1.5}
+]
+},
+
+"gloves":{
+name:"Chemical-Resistant Gloves",
+category:"🦺 Safety Equipment — Essential",
+desc:"Protective laboratory gloves selected for compatible tasks and materials.",
+basePrice:15,
+unit:"pair",
+image:"https://upload.wikimedia.org/wikipedia/commons/8/8e/Laboratory_gloves.jpg",
+variants:[
+{name:"Standard Pair",multiplier:1},
+{name:"Heavy-Duty Pair",multiplier:1.5}
+]
+},
+
+"eyewash":{
+name:"Eyewash Station",
+category:"🦺 Safety Equipment — Essential",
+desc:"Emergency eyewash equipment for laboratory safety planning.",
+basePrice:150,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/5/5e/Eyewash_station.jpg",
+variants:[
+{name:"Wall Model",multiplier:1},
+{name:"Portable Model",multiplier:1.4}
+]
+},
+
+"safety-shower":{
+name:"Safety Shower",
+category:"🦺 Safety Equipment — Essential",
+desc:"Emergency safety shower equipment.",
+basePrice:350,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/7/7c/Safety_shower.jpg",
+variants:[
+{name:"Standard Station",multiplier:1},
+{name:"Combined Shower Station",multiplier:1.7}
+]
+},
+
+"fire-extinguisher":{
+name:"Laboratory Fire Extinguisher",
+category:"🦺 Safety Equipment — Essential",
+desc:"Laboratory safety equipment selected according to the relevant fire hazards.",
+basePrice:90,
+unit:"unit",
+image:"https://upload.wikimedia.org/wikipedia/commons/4/4b/Fire_extinguisher.jpg",
+variants:[
+{name:"Standard Laboratory Unit",multiplier:1},
+{name:"Large Unit",multiplier:1.5}
+]
+},
+
+"spill-control":{
+name:"Spill-Control Materials",
+category:"🦺 Safety Equipment — Essential",
+desc:"Absorbent and containment materials for laboratory spill-response planning.",
+basePrice:45,
+unit:"kit",
+image:"https://upload.wikimedia.org/wikipedia/commons/4/4a/Spill_kit.jpg",
+variants:[
+{name:"Small Kit",multiplier:1},
+{name:"Large Kit",multiplier:1.8}
+]
+},
+
+"first-aid":{
+name:"First-Aid Supplies",
+category:"🦺 Safety Equipment — Essential",
+desc:"General first-aid supplies for laboratory preparedness.",
+basePrice:35,
+unit:"kit",
+image:"https://upload.wikimedia.org/wikipedia/commons/9/9c/First_aid_kit.jpg",
+variants:[
+{name:"Basic Kit",multiplier:1},
+{name:"Laboratory Kit",multiplier:1.7}
+]
+},
+
+"storage-cabinets":{
+name:"Chemical Storage Cabinets",
+category:"🦺 Safety Equipment — Essential",
+desc:"Storage equipment designed for appropriate laboratory chemical-storage practices.",
+basePrice:700,
+unit:"cabinet",
+image:"https://upload.wikimedia.org/wikipedia/commons/8/84/Laboratory_storage_cabinet.jpg",
+variants:[
+{name:"Compact Cabinet",multiplier:1},
+{name:"Large Cabinet",multiplier:1.8}
+]
+},
+
+"waste-containers":{
+name:"Chemical-Waste Containers",
+category:"🦺 Safety Equipment — Essential",
+desc:"Clearly labeled waste containers for appropriate laboratory waste-management procedures.",
+basePrice:35,
+unit:"set",
+image:"https://upload.wikimedia.org/wikipedia/commons/4/4f/Laboratory_waste_container.jpg",
+variants:[
+{name:"Small Set",multiplier:1},
+{name:"Large Set",multiplier:1.7}
+]
+}
+
+};
+
+/* =========================================================
+   EQUIPMENT CATEGORY ORDER
+   ========================================================= */
+
+const equipmentCategories = [
+
+{
+title:"🧪 Basic Glassware",
+items:[
+"beakers",
+"erlenmeyer",
+"volumetric",
+"graduated",
+"test-tubes",
+"watch-glasses",
+"stirring-rods",
+"reagent-bottles",
+"pipettes"
+]
+},
+
+{
+title:"📏 Measuring & Dispensing",
+items:[
+"analytical-balance",
+"top-balance",
+"micropipettes",
+"burettes",
+"pipette-fillers",
+"thermometers",
+"ph-meter",
+"stopwatch"
+]
+},
+
+{
+title:"🔥 Heating & Mixing",
+items:[
+"hotplate",
+"stir-bars",
+"heating-mantle",
+"water-bath",
+"oven",
+"ice-bath"
+]
+},
+
+{
+title:"🧰 General Lab Tools",
+items:[
+"spatulas",
+"forceps",
+"funnels",
+"filter-paper",
+"wash-bottles",
+"mortar",
+"clamps",
+"rubber-tubing"
+]
+},
+
+{
+title:"🔬 More Advanced Equipment",
+items:[
+"fume-hood",
+"vacuum-filtration",
+"rotary-evaporator",
+"centrifuge",
+"uv-vis",
+"conductivity",
+"melting-point",
+"distillation",
+"gc",
+"hplc"
+]
+},
+
+{
+title:"🦺 Safety Equipment — Essential",
+items:[
+"goggles",
+"lab-coat",
+"gloves",
+"eyewash",
+"safety-shower",
+"fire-extinguisher",
+"spill-control",
+"first-aid",
+"storage-cabinets",
+"waste-containers"
+]
+}
+
+];
+
+/* =========================================================
+   CART
+   ========================================================= */
+
+let cart = JSON.parse(
+    localStorage.getItem("chemistryMarketCart") || "[]"
+);
+
+let currentProduct = null;
+
+let previousView = "home";
+
+/* =========================================================
+   SAVE CART
+   ========================================================= */
+
+function saveCart() {
+
+    localStorage.setItem(
+        "chemistryMarketCart",
+        JSON.stringify(cart)
+    );
+
+}
+
+/* =========================================================
+   GET PRODUCT
+   ========================================================= */
+
+function getProduct(type,key) {
+
+    if(type === "element") {
+        return elementsData[key];
+    }
+
+    return equipmentData[key];
+
+}
+
+/* =========================================================
+   RENDER CHEMICAL CATALOG
+   ========================================================= */
+
+function renderChemicalCatalog() {
+
+    const popular = [
+        "O",
+        "C",
+        "Fe",
+        "Cu",
+        "H"
+    ];
+
+    const recommended = [
+        "Ce",
+        "He",
+        "Hg",
+        "Pu"
+    ];
+
+    const stock = Object.keys(elementsData);
+
+    document.getElementById("popular-grid").innerHTML =
+        popular.map(createChemicalCard).join("");
+
+    document.getElementById("recommended-grid").innerHTML =
+        recommended.map(createChemicalCard).join("");
+
+    document.getElementById("stock-grid").innerHTML =
+        stock.map(createChemicalCard).join("");
+
+}
+
+/* =========================================================
+   CHEMICAL CARD
+   ========================================================= */
+
+function createChemicalCard(key) {
+
+    const item = elementsData[key];
+
+    return `
+
+<div
+    class="element-card"
+    onclick="openProduct('element','${key}')"
+>
+
+    <div>
+
+        <div class="el-header">
+            <span>
+                ${item.number}
+            </span>
+
+            <span>
+                ${item.mass}
+            </span>
+        </div>
+
+        <div class="el-symbol">
+            ${key}
+        </div>
+
+        <div class="el-name">
+            ${item.name}
+        </div>
+
+        <div class="el-info">
+            ${item.desc}
+        </div>
+
+    </div>
+
+    <div class="el-footer">
+
+        <span class="price">
+            $${item.basePrice.toFixed(2)}
+            /
+            ${item.unit}
+        </span>
+
+        <button
+            class="btn"
+            onclick="
+                event.stopPropagation();
+                openProduct('element','${key}')
+            "
+        >
+            Select
+        </button>
+
+    </div>
+
+</div>
+
+`;
+
+}
+
+/* =========================================================
+   RENDER EQUIPMENT
+   ========================================================= */
+
+function renderEquipment() {
+
+    const container =
+        document.getElementById("equipment-container");
+
+    container.innerHTML =
+        equipmentCategories.map(category => `
+
+<div class="equipment-category">
+
+    <h3>
+        ${category.title}
+    </h3>
+
+    <div class="equipment-grid">
+
+        ${category.items.map(key => {
+
+            const item = equipmentData[key];
+
+            return `
+
+<div
+    class="equipment-card"
+    onclick="openProduct('equipment','${key}')"
+>
+
+    <div>
+
+        <div class="equipment-icon">
+            ${getEquipmentIcon(item.category)}
+        </div>
+
+        <h4>
+            ${item.name}
+        </h4>
+
+        <p>
+            ${item.desc}
+        </p>
+
+    </div>
+
+    <div class="equipment-price">
+        From $${item.basePrice.toFixed(2)}
+        / ${item.unit}
+    </div>
+
+</div>
+
+`;
+
+        }).join("")}
+
+    </div>
+
+</div>
+
+`).join("");
+
+}
+
+/* =========================================================
+   EQUIPMENT ICON
+   ========================================================= */
+
+function getEquipmentIcon(category) {
+
+    if(category.includes("Glassware")) return "🧪";
+
+    if(category.includes("Measuring")) return "📏";
+
+    if(category.includes("Heating")) return "🔥";
+
+    if(category.includes("General")) return "🧰";
+
+    if(category.includes("Advanced")) return "🔬";
+
+    if(category.includes("Safety")) return "🦺";
+
+    return "⚗️";
+
+}
+
+/* =========================================================
+   OPEN PRODUCT
+   ========================================================= */
+
+function openProduct(type,key) {
+
+    const item = getProduct(type,key);
+
+    if(!item) return;
+
+    currentProduct = {
+        type,
+        key
+    };
+
+    previousView =
+        type === "equipment"
+            ? "equipment"
+            : "home";
+
+    document.getElementById("detail-img").src =
+        item.image;
+
+    document.getElementById("detail-name").innerText =
+        item.name;
+
+    document.getElementById("detail-symbol-tag").innerText =
+        type === "element"
+            ? `Symbol: ${key}`
+            : "Laboratory Equipment";
+
+    document.getElementById("detail-num-mass").innerText =
+        type === "element"
+            ? `Atomic Number: ${item.number} | Atomic Mass: ${item.mass}`
+            : item.category;
+
+    document.getElementById("detail-description").innerText =
+        item.desc;
+
+    const select =
+        document.getElementById("variant-select");
+
+    select.innerHTML =
+        item.variants.map((variant,index) => `
+
+<option
+    value="${index}"
+>
+    ${variant.name}
+</option>
+
+`).join("");
+
+    document.getElementById(
+        "quantity-input"
+    ).value = 1;
+
+    updatePriceCalculation();
+
+    showView("detail");
+
+}
+
+/* =========================================================
+   PRICE CALCULATION
+   ========================================================= */
+
+function updatePriceCalculation() {
+
+    if(!currentProduct) return;
+
+    const item =
+        getProduct(
+            currentProduct.type,
+            currentProduct.key
+        );
+
+    const index =
+        Number(
+            document.getElementById(
+                "variant-select"
+            ).value
+        );
+
+    const variant =
+        item.variants[index];
+
+    let quantity =
+        parseInt(
+            document.getElementById(
+                "quantity-input"
+            ).value
+        ) || 1;
+
+    if(quantity < 1) quantity = 1;
+
+    if(quantity > 100) quantity = 100;
+
+    document.getElementById(
+        "quantity-input"
+    ).value = quantity;
+
+    const total =
+        item.basePrice *
+        variant.multiplier *
+        quantity;
+
+    document.getElementById(
+        "detail-total-price"
+    ).innerText =
+        `$${total.toFixed(2)} USD`;
+
+}
+
+/* =========================================================
+   ADD TO CART
+   ========================================================= */
+
+function addToCartAction() {
+
+    if(!currentProduct) return;
+
+    const item =
+        getProduct(
+            currentProduct.type,
+            currentProduct.key
+        );
+
+    const variantIndex =
+        Number(
+            document.getElementById(
+                "variant-select"
+            ).value
+        );
+
+    const variant =
+        item.variants[variantIndex];
+
+    const quantity =
+        Math.max(
+            1,
+            Math.min(
+                100,
+                parseInt(
+                    document.getElementById(
+                        "quantity-input"
+                    ).value
+                ) || 1
+            )
+        );
+
+    const existing =
+        cart.find(product =>
+            product.type === currentProduct.type &&
+            product.key === currentProduct.key &&
+            product.variantIndex === variantIndex
+        );
+
+    if(existing) {
+
+        existing.quantity += quantity;
+
+    } else {
+
+        cart.push({
+
+            type:currentProduct.type,
+
+            key:currentProduct.key,
+
+            variantIndex,
+
+            quantity
+
+        });
+
+    }
+
+    saveCart();
+
+    updateCartUI();
+
+    showNotification(
+        `${quantity} × ${item.name} added to cart 🧪`
+    );
+
+}
+
+/* =========================================================
+   BUY NOW
+   ========================================================= */
+
+function buyNowAction() {
+
+    addToCartAction();
+
+    showCheckout();
+
+}
+
+/* =========================================================
+   CART COUNT
+   ========================================================= */
+
+function getCartCount() {
+
+    return cart.reduce(
+        (total,item) =>
+            total + item.quantity,
+        0
+    );
+
+}
+
+/* =========================================================
+   CART UI
+   ========================================================= */
+
+function updateCartUI() {
+
+    const count = getCartCount();
+
+    document.getElementById(
+        "cart-header-btn"
+    ).innerText =
+        `Cart [${count}]`;
+
+    document.getElementById(
+        "sidebar-cart-count"
+    ).innerText =
+        `[${count}]`;
+
+    renderCart();
+
+}
+
+/* =========================================================
+   CART PRICE
+   ========================================================= */
+
+function getCartSubtotal() {
+
+    return cart.reduce(
+        (total,cartItem) => {
+
+            const item =
+                getProduct(
+                    cartItem.type,
+                    cartItem.key
+                );
+
+            if(!item) return total;
+
+            const variant =
+                item.variants[
+                    cartItem.variantIndex
+                ];
+
+            return total +
+                item.basePrice *
+                variant.multiplier *
+                cartItem.quantity;
+
+        },
+        0
+    );
+
+}
+
+/* =========================================================
+   RENDER CART
+   ========================================================= */
+
+function renderCart() {
+
+    const container =
+        document.getElementById(
+            "cart-items"
+        );
+
+    if(!cart.length) {
+
+        container.innerHTML = `
+
+<div class="empty-cart">
+
+    <div style="font-size:3rem;">
+        🛒
+    </div>
+
+    <h3 style="
+        font-family:'Special Elite';
+        margin:10px;
+    ">
+        Your laboratory cart is empty.
+    </h3>
+
+    <p style="
+        font-size:.75rem;
+        color:var(--ink-soft);
+    ">
+        Select an element or piece of equipment
+        to begin your catalog order.
+    </p>
+
+    <button
+        class="btn green"
+        style="margin-top:15px;"
+        onclick="showView('home')"
+    >
+        Browse Chemical Elements
+    </button>
+
+</div>
+
+`;
+
+    } else {
+
+        container.innerHTML =
+            cart.map(
+                (cartItem,index) =>
+                    createCartItem(cartItem,index)
+            ).join("");
+
+    }
+
+    const subtotal =
+        getCartSubtotal();
+
+    const handling =
+        cart.length ? 5 : 0;
+
+    document.getElementById(
+        "summary-items"
+    ).innerText =
+        getCartCount();
+
+    document.getElementById(
+        "summary-subtotal"
+    ).innerText =
+        `$${subtotal.toFixed(2)}`;
+
+    document.getElementById(
+        "summary-handling"
+    ).innerText =
+        `$${handling.toFixed(2)}`;
+
+    document.getElementById(
+        "summary-total"
+    ).innerText =
+        `$${(subtotal + handling).toFixed(2)}`;
+
+}
+
+/* =========================================================
+   CREATE CART ITEM
+   ========================================================= */
+
+function createCartItem(cartItem,index) {
+
+    const item =
+        getProduct(
+            cartItem.type,
+            cartItem.key
+        );
+
+    const variant =
+        item.variants[
+            cartItem.variantIndex
+        ];
+
+    const price =
+        item.basePrice *
+        variant.multiplier *
+        cartItem.quantity;
+
+    return `
+
+<div class="cart-item">
+
+    <img
+        src="${item.image}"
+        alt="${item.name}"
+        onerror="
+            this.src='https://via.placeholder.com/100?text=Lab+Item'
+        "
+    >
+
+    <div class="cart-item-info">
+
+        <h4>
+            ${item.name}
+        </h4>
+
+        <p>
+            ${cartItem.type === "element"
+                ? "Chemical Element"
+                : "Laboratory Equipment"}
+        </p>
+
+        <p>
+            Version:
+            ${variant.name}
+        </p>
+
+        <div class="cart-controls">
+
+            <button
+                class="qty-btn"
+                onclick="changeCartQuantity(${index},-1)"
+            >
+                −
+            </button>
+
+            <span class="cart-qty">
+                ${cartItem.quantity}
+            </span>
+
+            <button
+                class="qty-btn"
+                onclick="changeCartQuantity(${index},1)"
+            >
+                +
+            </button>
+
+        </div>
+
+    </div>
+
+    <div>
+
+        <strong
+            style="
+                color:var(--danger);
+                display:block;
+                margin-bottom:8px;
+            "
+        >
+            $${price.toFixed(2)}
+        </strong>
+
+        <button
+            class="remove-btn"
+            onclick="removeCartItem(${index})"
+        >
+            ✕ Remove
+        </button>
+
+    </div>
+
+</div>
+
+`;
+
+}
+
+/* =========================================================
+   CHANGE CART QUANTITY
+   ========================================================= */
+
+function changeCartQuantity(index,change) {
+
+    if(!cart[index]) return;
+
+    cart[index].quantity += change;
+
+    if(cart[index].quantity <= 0) {
+
+        cart.splice(index,1);
+
+    }
+
+    if(cart[index]) {
+
+        cart[index].quantity =
+            Math.min(
+                100,
+                cart[index].quantity
+            );
+
+    }
+
+    saveCart();
+
+    updateCartUI();
+
+}
+
+/* =========================================================
+   REMOVE CART ITEM
+   ========================================================= */
+
+function removeCartItem(index) {
+
+    cart.splice(index,1);
+
+    saveCart();
+
+    updateCartUI();
+
+}
+
+/* =========================================================
+   CLEAR CART
+   ========================================================= */
+
+function clearCart() {
+
+    if(!cart.length) return;
+
+    if(
+        confirm(
+            "Clear all items from the laboratory cart?"
+        )
+    ) {
+
+        cart = [];
+
+        saveCart();
+
+        updateCartUI();
+
+    }
+
+}
+
+/* =========================================================
+   CHECKOUT
+   ========================================================= */
+
+function showCheckout() {
+
+    if(!cart.length) {
+
+        showNotification(
+            "Your cart is empty."
+        );
+
+        showView("cart");
+
+        return;
+
+    }
+
+    renderCheckout();
+
+    showView("checkout");
+
+}
+
+/* =========================================================
+   RENDER CHECKOUT
+   ========================================================= */
+
+function renderCheckout() {
+
+    const container =
+        document.getElementById(
+            "checkout-items"
+        );
+
+    container.innerHTML =
+        cart.map(cartItem => {
+
+            const item =
+                getProduct(
+                    cartItem.type,
+                    cartItem.key
+                );
+
+            const variant =
+                item.variants[
+                    cartItem.variantIndex
+                ];
+
+            const total =
+                item.basePrice *
+                variant.multiplier *
+                cartItem.quantity;
+
+            return `
+
+<div class="checkout-product">
+
+<strong>
+    ${item.name}
+</strong>
+
+<br>
+
+${variant.name}
+
+<br>
+
+Quantity:
+${cartItem.quantity}
+
+<span style="float:right;">
+    $${total.toFixed(2)}
+</span>
+
+</div>
+
+`;
+
+        }).join("");
+
+    const subtotal =
+        getCartSubtotal();
+
+    document.getElementById(
+        "checkout-subtotal"
+    ).innerText =
+        `$${subtotal.toFixed(2)}`;
+
+    document.getElementById(
+        "checkout-total"
+    ).innerText =
+        `$${(subtotal + 5).toFixed(2)}`;
+
+}
+
+/* =========================================================
+   DEMO ORDER
+   ========================================================= */
+
+function placeDemoOrder() {
+
+    const first =
+        document.getElementById(
+            "first-name"
+        ).value.trim();
+
+    const last =
+        document.getElementById(
+            "last-name"
+        ).value.trim();
+
+    const email =
+        document.getElementById(
+            "email"
+        ).value.trim();
+
+    if(!first || !last || !email) {
+
+        alert(
+            "Please complete the basic customer information."
+        );
+
+        return;
+
+    }
+
+    alert(
+`DEMO CHECKOUT
+
+Thank you, ${first} ${last}!
+
+Your demonstration order has been created.
+
+No real payment has been processed.
+
+Order total:
+$${(getCartSubtotal()+5).toFixed(2)}
+
+This is a front-end demonstration only.`
+    );
+
+    cart = [];
+
+    saveCart();
+
+    updateCartUI();
+
+    showView("home");
+
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+function performSearch(query) {
+
+    query =
+        query
+        .trim()
+        .toLowerCase();
+
+    if(!query) {
+
+        showView(
+            document
+                .getElementById("nav-elements")
+                .classList.contains("active")
+                ? "home"
+                : "equipment"
+        );
+
+        return;
+
+    }
+
+    const results = [];
+
+    Object.entries(elementsData)
+        .forEach(([key,item]) => {
+
+            const searchable =
+                `
+                ${key}
+                ${item.name}
+                ${item.desc}
+                ${item.mass}
+                `.toLowerCase();
+
+            if(searchable.includes(query)) {
+
+                results.push({
+                    type:"element",
+                    key,
+                    item
+                });
+
+            }
+
+        });
+
+    Object.entries(equipmentData)
+        .forEach(([key,item]) => {
+
+            const searchable =
+                `
+                ${key}
+                ${item.name}
+                ${item.desc}
+                ${item.category}
+                `.toLowerCase();
+
+            if(searchable.includes(query)) {
+
+                results.push({
+                    type:"equipment",
+                    key,
+                    item
+                });
+
+            }
+
+        });
+
+    document.getElementById(
+        "search-title"
+    ).innerText =
+        `Search Results for "${query}"`;
+
+    const resultsContainer =
+        document.getElementById(
+            "search-results"
+        );
+
+    if(!results.length) {
+
+        resultsContainer.innerHTML = `
+
+<div style="
+    grid-column:1/-1;
+    text-align:center;
+    padding:40px;
+">
+
+    <div style="font-size:3rem;">
+        🔬
+    </div>
+
+    <h3 style="
+        font-family:'Special Elite';
+        margin:10px;
+    ">
+        No results found
+    </h3>
+
+    <p style="
+        font-size:.75rem;
+        color:var(--ink-soft);
+    ">
+        Try searching for an element,
+        glassware, balance, flask, meter, etc.
+    </p>
+
+</div>
+
+`;
+
+    } else {
+
+        resultsContainer.innerHTML =
+            results.map(result => {
+
+                const item = result.item;
+
+                return `
+
+<div
+    class="element-card"
+    onclick="
+        openProduct(
+            '${result.type}',
+            '${result.key}'
+        )
+    "
+>
+
+    <div>
+
+        <div class="el-symbol">
+            ${
+                result.type === "element"
+                    ? result.key
+                    : getEquipmentIcon(item.category)
+            }
+        </div>
+
+        <div class="el-name">
+            ${item.name}
+        </div>
+
+        <div class="el-info">
+            ${item.desc}
+        </div>
+
+    </div>
+
+    <div class="el-footer">
+
+        <span class="price">
+            From $${item.basePrice.toFixed(2)}
+        </span>
+
+        <button
+            class="btn"
+            onclick="
+                event.stopPropagation();
+
+                openProduct(
+                    '${result.type}',
+                    '${result.key}'
+                )
+            "
+        >
+            View
+        </button>
+
+    </div>
+
+</div>
+
+`;
+
+            }).join("");
+
+    }
+
+    showView("search");
+
+}
+
+/* =========================================================
+   VIEW ROUTING
+   ========================================================= */
+
+function showView(view) {
+
+    document
+        .querySelectorAll(".view")
+        .forEach(element =>
+            element.classList.remove("active")
+        );
+
+    const target =
+        document.getElementById(
+            `${view}-view`
+        );
+
+    if(!target) return;
+
+    target.classList.add("active");
+
+    document
+        .getElementById("nav-elements")
+        .classList.remove("active");
+
+    document
+        .getElementById("nav-equipment")
+        .classList.remove("active");
+
+    if(view === "home") {
+
+        document
+            .getElementById("nav-elements")
+            .classList.add("active");
+
+    }
+
+    if(view === "equipment") {
+
+        document
+            .getElementById("nav-equipment")
+            .classList.add("active");
+
+    }
+
+    if(view === "cart") {
+
+        renderCart();
+
+    }
+
+    if(view === "checkout") {
+
+        renderCheckout();
+
+    }
+
+    closeSidebar();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+/* =========================================================
+   DETAIL BACK
+   ========================================================= */
+
+function goBackFromDetail() {
+
+    showView(previousView);
+
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+function toggleSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+    document
+        .getElementById("sidebar-overlay")
+        .classList.toggle("open");
+
+}
+
+function closeSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList.remove("open");
+
+    document
+        .getElementById("sidebar-overlay")
+        .classList.remove("open");
+
+}
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+function toggleDarkMode() {
+
+    document.body.classList.toggle(
+        "dark-mode"
+    );
+
+    const enabled =
+        document.body.classList.contains(
+            "dark-mode"
+        );
+
+    localStorage.setItem(
+        "chemistryDarkMode",
+        enabled
+    );
+
+    document.getElementById(
+        "dark-mode-button"
+    ).innerText =
+        enabled
+            ? "☀️ Light Laboratory Mode"
+            : "🌙 Dark Laboratory Mode";
+
+}
+
+/* =========================================================
+   NOTIFICATION
+   ========================================================= */
+
+function showNotification(message) {
+
+    const notification =
+        document.createElement("div");
+
+    notification.innerText =
+        message;
+
+    notification.style.position =
+        "fixed";
+
+    notification.style.right =
+        "20px";
+
+    notification.style.bottom =
+        "20px";
+
+    notification.style.zIndex =
+        "2000";
+
+    notification.style.background =
+        "var(--bb-green)";
+
+    notification.style.color =
+        "white";
+
+    notification.style.padding =
+        "14px 18px";
+
+    notification.style.border =
+        "2px solid var(--ink)";
+
+    notification.style.boxShadow =
+        "5px 5px 0 var(--ink)";
+
+    notification.style.fontFamily =
+        "'Courier Prime',monospace";
+
+    notification.style.fontWeight =
+        "bold";
+
+    notification.style.maxWidth =
+        "300px";
+
+    notification.style.animation =
+        "pageIn .3s ease";
+
+    document.body.appendChild(
+        notification
+    );
+
+    setTimeout(() => {
+
+        notification.remove();
+
+    },3000);
+
+}
+
+/* =========================================================
+   SEARCH SYNCHRONIZATION
+   ========================================================= */
+
+document
+    .getElementById("header-search")
+    .addEventListener("input",function(){
+
+        document.getElementById(
+            "sidebar-search"
+        ).value = this.value;
+
+    });
+
+document
+    .getElementById("sidebar-search")
+    .addEventListener("input",function(){
+
+        document.getElementById(
+            "header-search"
+        ).value = this.value;
+
+    });
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+function initializeApp() {
+
+    renderChemicalCatalog();
+
+    renderEquipment();
+
+    updateCartUI();
+
+    const darkMode =
+        localStorage.getItem(
+            "chemistryDarkMode"
+        ) === "true";
+
+    if(darkMode) {
+
+        document.body.classList.add(
+            "dark-mode"
+        );
+
+        document.getElementById(
+            "dark-mode-button"
+        ).innerText =
+            "☀️ Light Laboratory Mode";
+
+    }
+
+}
+
+initializeApp();
+
+</script>
+
+</body>
+</html>
